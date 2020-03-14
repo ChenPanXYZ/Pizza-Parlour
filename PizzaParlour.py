@@ -2,6 +2,10 @@ from flask import Flask
 from flask import request
 import json
 
+from classes.Test import Test
+from classes.Menu import Menu
+from classes.System import System
+
 app = Flask("Assignment 2")
 
 @app.route('/pizza')
@@ -9,9 +13,25 @@ def welcome_pizza():
     print("hello")
     return 'Welcome to Pizza Planet!'
 
-@app.route('/test', methods=['GET', 'POST'])
-def test():
-    return request.get_json()
+@app.route('/get-full-menu', methods=['GET'])
+def get_full_menu():
+    # curl localhost:5000/get-full-menu
+    return system.menu.get_full_content()
+
+@app.route('/get-price-for-specific-item', methods=['POST'])
+def get_price_for_specific_item():
+    data = request.get_json()
+    item = data["item"]
+    if item in system.menu.content['pizza']['size']:
+        return {"price": system.menu.content['pizza']['size'][item]}
+    elif item in system.menu.content['pizza']['type']:
+        return {"price": system.menu.content['pizza']['type'][item]}
+    elif item in system.menu.content['pizza']['topping']:
+        return {"price": system.menu.content['pizza']['topping'][item]}
+    elif item in system.menu.content['pizza']['drink']:
+        return {"price": system.menu.content['pizza']['drink'][item]}
+    else:
+        return {"price": -1} # tell the fron-end that this item doesn't exist
 
 @app.route('/new-order', methods=['POST'])
 def new_order():
@@ -57,4 +77,8 @@ def get_price(item):
 
 if __name__ == "__main__":
     welcome_pizza()
-    app.run()
+    system = System()
+
+
+    # order = Orders()从orders.json中读取数据
+    app.run(debug=True, host='0.0.0.0')
