@@ -27,20 +27,27 @@ def new_order():
         this_pizza_type_price = get_price(this_pizza_type)
 
         this_pizza_price += this_pizza_type_price
-        # toppings price
-
-
-
+        # toppings price "toppings": [{"olives": 2}, {"tomatoes": 1}]}]
+        this_pizza_topping = pizza['topping']
+        toppings_price = 0
+        for topping in this_pizza_topping.keys():
+            toppings_price += get_price(topping) * this_pizza_topping[topping]
+        this_pizza_price += toppings_price
+   
         if(this_pizza_type == "S"):
-            this_pizza_type_price *= 0.8
+            this_pizza_price *= 0.8
         elif(this_pizza_type == "L"):
-            this_pizza_type_price *= 1.5
-    for sdrink in drinks:
-        this_drink_price = 0
+            this_pizza_price *= 1.5
+        total_price += this_pizza_price
+
+    for drink in drinks.keys():
+
+        total_price += get_price(drink) * drinks[drink]
+
     return {"price": this_pizza_type_price}
 
 
-# curl localhost:5000/new-order -d '{"pizzas": [{"size": "M", "type": "pepperoni", "toppings": [{"olives": 2}, {"tomatoes": 1}]}], "drinks": []}' -H 'Content-Type: application/json'
+# curl localhost:5000/new-order -d '{"pizzas": [{"size": "M", "type": "pepperoni", "toppings": {"olives": 2, "tomatoes": 1}], "drinks": {"Coke": 1, "Diet Coke":2, "Coke Zero":3}' -H 'Content-Type: application/json'
 
 def get_price(item):
     prices = {}
