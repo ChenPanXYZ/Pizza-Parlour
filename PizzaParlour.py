@@ -5,7 +5,7 @@ import json
 from classes.Test import Test
 from classes.Menu import Menu
 from classes.System import System
-
+from classes.Orders import Orders
 app = Flask("Assignment 2")
 
 @app.route('/pizza')
@@ -32,6 +32,10 @@ def get_price_for_specific_item():
         return {"price": system.menu.content['pizza']['drink'][item]}
     else:
         return {"price": -1} # tell the fron-end that this item doesn't exist
+
+@app.route('/show-orders', methods = ['GET'])
+def show_orders():
+    return {"orders":Orders().get_all_orders()}
 
 @app.route('/new-order', methods=['POST'])
 def new_order():
