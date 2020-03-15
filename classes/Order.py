@@ -43,7 +43,7 @@ class Order:
 
                 this.price += pizza.get_price(menu)
                 if pizza.number == 0:
-                    this.pizzas.pop(pizza)
+                    this.pizzas.remove(pizza)
                 return
                 
 

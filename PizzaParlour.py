@@ -97,7 +97,7 @@ def add_new_type():
 
 @app.route('/change-an-order', methods = ['POST'])
 def change_an_order():
-    # curl localhost:5000/add-new-type -d '{"order_number": 1, "pizzas": [{"pizza_id": 1, "size": "L", "toppings": {"olives" : 2}}], "drinks": [{"item_id": 1, "number": 3}]}' -H 'Content-Type: application/json'
+    # curl localhost:5000/change-an-order -d '{"order_number": 1, "pizzas": [{"item_id": 1, "size": "L", "toppings": {"olives" : 0}}]}' -H 'Content-Type: application/json'
 
     data = request.get_json()
     order_number = data["order_number"]
@@ -125,7 +125,9 @@ def change_an_order():
 
 @app.route('/set-address', methods = ['POST'])
 def set_address():
-    # curl localhost:5000/set-address -d '{"order_number": 1, "address": "855 Huntingwood", "delivery": "uber"}' -H 'Content-Type: application/json'
+    # curl localhost:5000/set-address -d '{"order_number": 1, "address": "855 dgsdg", "delivery": "uber"}' -H 'Content-Type: application/json'
+
+
     return
 
 
