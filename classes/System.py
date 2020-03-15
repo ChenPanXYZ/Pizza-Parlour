@@ -1,5 +1,6 @@
 from classes.Menu import Menu
+from classes.Orders import Orders
 class System:
     def __init__(this):
-        # this.orders = Orders()
         this.menu = Menu()
+        this.orders = Orders(this.menu)

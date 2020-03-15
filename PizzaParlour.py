@@ -6,6 +6,7 @@ from classes.Test import Test
 from classes.Menu import Menu
 from classes.System import System
 from classes.Orders import Orders
+from classes.Order import Order
 app = Flask("Assignment 2")
 
 @app.route('/pizza')
@@ -17,6 +18,23 @@ def welcome_pizza():
 def get_full_menu():
     # curl localhost:5000/get-full-menu
     return system.menu.get_full_content()
+
+@app.route('/check-order', methods=['POST'])
+def check_order():
+    # curl localhost:5000/check-order -d '{"order_number": 1}' -H 'Content-Type: application/json'
+    data = request.get_json()
+    order_number = data['order_number']
+    return system.orders.details[order_number].toJSON()
+
+@app.route('/cancel-order', methods=['POST'])
+def cancel_order():
+    # curl localhost:5000/cancel-order -d '{"order_number": 1}' -H 'Content-Type: application/json'
+    data = request.get_json()
+    order_number = data['order_number']
+    system.orders.details.pop(order_number)
+    with open('orders.json', 'w') as f:
+        json.dump(system.orders.toJSON(), f)
+    return 'success'
 
 @app.route('/get-price-for-specific-item', methods=['POST'])
 def get_price_for_specific_item():
@@ -37,52 +55,86 @@ def get_price_for_specific_item():
 def show_orders():
     return {"orders":Orders().get_all_orders()}
 
-@app.route('/new-order', methods=['POST'])
-def new_order():
+@app.route('/make-new-order', methods = ['POST'])
+def make_new_order():
+# curl localhost:5000/make-new-order -d '{}'
+    system.orders.add_new_order()
+    with open('orders.json', 'w') as f:
+        json.dump(system.orders.toJSON(), f)
+    return 'success'
+
+@app.route('/order-a-pizza', methods = ['POST'])
+def order_a_pizza():
+    # curl localhost:5000/order-a-pizza -d '{"order_number": 1, "pizza": {"number": 2, "size": "M", "type": "pepperoni", "toppings": {"olives": 2, "tomatoes": 1}}}' -H 'Content-Type: application/json'
     data = request.get_json()
-    pizzas = data['pizzas'] ## This is an array of all pizza.
-    drinks = data['drinks'] ## This is an array of all drinks.
-    total_price = 0
-    for pizza in pizzas:
-        this_pizza_price = 0
-        this_pizza_size = pizza['size']
+    order = system.orders.details[data["order_number"]]
+    order.add_pizza(data['pizza'], system.menu)
+    with open('orders.json', 'w') as f:
+        json.dump(system.orders.toJSON(), f)
+    return 'success'
 
-        this_pizza_type = pizza['type']
-        this_pizza_type_price = get_price(this_pizza_type)
+@app.route('/order-a-drink', methods = ['POST'])
+def order_a_drink():
+    # curl localhost:5000/order-a-drink -d '{"order_number": 1, "drink": {"type": "Diet Coke", "number": 2}}' -H 'Content-Type: application/json'
+    data = request.get_json()
+    order = system.orders.details[data["order_number"]]
+    order.add_drink(data['drink']['type'], data['drink']['number'], system.menu)
+    with open('orders.json', 'w') as f:
+        json.dump(system.orders.toJSON(), f)
+    return 'success'
 
-        this_pizza_price += this_pizza_type_price
-        # toppings price "toppings": [{"olives": 2}, {"tomatoes": 1}]}]
-        this_pizza_topping = pizza['toppings']
-        toppings_price = 0
-        for topping in this_pizza_topping.keys():
-            toppings_price += get_price(topping) * this_pizza_topping[topping]
-        this_pizza_price += toppings_price
-   
-        if(this_pizza_size == "S"):
-            this_pizza_price *= 0.8
-        elif(this_pizza_size == "L"):
-            this_pizza_price *= 1.5
-        total_price += this_pizza_price
 
-    for drink in drinks.keys():
+@app.route('/add-new-type', methods = ['POST'])
+def add_new_type():
+    # curl localhost:5000/add-new-type -d '{"typename": "Yuwan", "price": 2}' -H 'Content-Type: application/json'
+    data = request.get_json()
+    typename = data["typename"]
+    price = data["price"]
+    system.menu.content['pizza']['type'][typename] = price
+    with open('menu.json', 'w') as f:
+        json.dump(system.menu.toJSON(), f)
+    return 'success'
 
-        total_price += get_price(drink) * drinks[drink]
+@app.route('/change-an-order', methods = ['POST'])
+def change_an_order():
+    # curl localhost:5000/add-new-type -d '{"order_number": 1, "pizzas": [{"pizza_id": 1, "size": "L", "toppings": {"olives" : 2}}], "drinks": [{"item_id": 1, "number": 3}]}' -H 'Content-Type: application/json'
 
-    return {"price": total_price}
+    data = request.get_json()
+    order_number = data["order_number"]
+    order = system.orders.details[order_number]
+    changed_drinks = []
+    changed_pizzas = []
+    if "drinks" in data:
+        changed_drinks = data["drinks"]
+    if "pizzas" in data:
+        changed_pizzas = data["pizzas"]
+
+
+    for drink in changed_drinks:
+        order.change_drink(drink, system.menu)
+    
+    for pizza in changed_pizzas:
+        order.change_pizza(pizza, system.menu)
+
+
+    with open('orders.json', 'w') as f:
+        json.dump(system.orders.toJSON(), f)
+
+
+    return 'success'
+
+@app.route('/set-address', methods = ['POST'])
+def set_address():
+    # curl localhost:5000/set-address -d '{"order_number": 1, "address": "855 Huntingwood", "delivery": "uber"}' -H 'Content-Type: application/json'
+    return
+
+
+
 
 
 # curl localhost:5000/new-order -d '{"pizzas": [{"size": "M", "type": "pepperoni", "toppings": {"olives": 2, "tomatoes": 1}}], "drinks": {"Coke": 1, "Diet Coke":2, "Coke Zero":3}}' -H 'Content-Type: application/json'
 
-def get_price(item):
-    prices = {}
-    with open('price.json', 'r') as f:
-        prices = json.load(f)
-    return prices[item]
-
 if __name__ == "__main__":
     welcome_pizza()
     system = System()
-
-
-    # order = Orders()从orders.json中读取数据
     app.run(debug=True, host='0.0.0.0')
