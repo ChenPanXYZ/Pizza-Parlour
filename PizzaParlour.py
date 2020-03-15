@@ -125,10 +125,33 @@ def change_an_order():
 
 @app.route('/set-address', methods = ['POST'])
 def set_address():
-    # curl localhost:5000/set-address -d '{"order_number": 1, "address": "855 dgsdg", "delivery": "uber"}' -H 'Content-Type: application/json'
+    # curl localhost:5000/set-address -d '{"order_number": 1, "address": "855 dgsdg"}' -H 'Content-Type: application/json'
+    data = request.get_json()
+    order_number = data["order_number"]
+    address = data["address"]
+    system.orders.details[order_number].set_address(address)
+    with open('orders.json', 'w') as f:
+        json.dump(system.orders.toJSON(), f)
+    return 'success'
+
+@app.route('/set-delivery', methods = ['POST'])
+def set_delivery():
+    # curl localhost:5000/set-delivery -d '{"order_number": 1, "delivery": "uber"}' -H 'Content-Type: application/json'
+    data = request.get_json()
+    order_number = data["order_number"]
+    delivery = data["delivery"]
+    if(delivery == "uber"):
+        return
+    elif(delivery == "foodora"):
+        return
 
 
-    return
+
+
+
+
+
+
 
 
 

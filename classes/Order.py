@@ -70,6 +70,9 @@ class Order:
                     this.drinks.remove(drink)
                 return
 
+    def set_address(this, address):
+        this.address = address
+
     def toJSON(this):
         result = {}
         result['pizzas'] = []
