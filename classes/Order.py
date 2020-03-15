@@ -78,10 +78,9 @@ class Order:
         result['pizzas'] = []
         for pizza in this.pizzas:
             result['pizzas'].append(pizza.toJSON())
-        result['drinks'] = {}
+        result['drinks'] = []
         for drink in this.drinks:
-            result['drinks'][drink.type] = drink.number
-            result['drinks']['item id'] = drink.item_id
+            result['drinks'].append(drink.toJSON())
         result['address'] = this.address
         result['price'] = this.price
         return result

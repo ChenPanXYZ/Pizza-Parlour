@@ -17,7 +17,13 @@ class Orders:
                 this.details[int(order_num)].add_pizza(pizza, menu)
 
             for drink in order["drinks"]:
-                this.details[int(order_num)].add_drink(drink, order["drinks"][drink], menu)
+                typename = ''
+                number = 0
+                for key in drink:
+                    if key != 'item_id':
+                        typename = key
+                        number = drink[key]
+                this.details[int(order_num)].add_drink(typename, number, menu)
 
     def add_new_order(this):
         if(not this.details):

@@ -7,3 +7,9 @@ class Drink(Item):
 
    def get_price(this, menu):
       return menu.get_price_for_specific_item(this.type) * this.number
+
+   def toJSON(this):
+      result = {}
+      result[this.type] = this.number
+      result['item_id'] = this.item_id
+      return result
