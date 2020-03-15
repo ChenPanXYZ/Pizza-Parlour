@@ -84,3 +84,28 @@ class Order:
         result['address'] = this.address
         result['price'] = this.price
         return result
+
+    def toCSV(this):
+        result = ''
+        i = 0
+        for pizza in this.pizzas:
+            result += pizza.toCSV()
+            if(i != len(this.pizzas) - 1):
+                result += '|'
+            
+            i = i + 1
+
+
+        result = result + ','
+        i = 0
+        for drink in this.drinks:
+            result+= drink.toCSV()
+            if(i != len(this.pizzas) - 1):
+                result += '|'
+            
+            i = i + 1
+
+        result = result + ','
+
+        result = result + this.address + "," + str(this.price) + "," + str(this.order_number)
+        return result

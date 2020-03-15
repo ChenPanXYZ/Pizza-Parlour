@@ -28,4 +28,11 @@ class Pizza(Item):
         result['item_id'] = this.item_id
         return result
 
+    def toCSV(this):
+        result = ''
+        result = result + str(this.item_id) + "-" + str(this.number) + "-" + this.size + "-" + this.type
+        for topping in this.toppings:
+            result = result + "-" + topping + "-" + str(this.toppings[topping])
+        return result
+
     

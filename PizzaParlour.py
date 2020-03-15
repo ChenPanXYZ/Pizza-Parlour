@@ -18,52 +18,7 @@ def welcome_pizza():
 
 @app.route('/test', methods=['POST'])
 def test():
-    foodora_deliveries = {}
-    with open('foodora.csv', 'r') as f:
-        rows = csv.reader(f)
-        for row in rows:
-            delivery_id_info = row[0]
-            address_info = row[1]
-            pizzas_info = row[2]
-            drinks_info = row[3]
-            order_address_info = row[4]
-            order_price = row[5]
-
-            pizzas_info = pizzas_info.split("|")
-
-            pizzas = []
-            for pizza_info in pizzas_info:
-                pizza_info = pizza_info.split("-")
-                pizza = {}
-                pizza['item_id'] = pizza_info[0]
-                pizza['size'] = pizza_info[1]
-                pizza['type'] = pizza_info[2]
-                pizza['toppings'] = {}
-                i = 3
-                while i < len(pizza_info) - 1:
-                    pizza['toppings'][pizza_info[i]] = pizza_info[i+1]
-                    i = i + 2
-
-                pizzas.append(pizza)
-            drinks = []
-            drinks_info = drinks_info.split("|")
-            for drink_info in drinks_info:
-                drink_info = drink_info.split("-")
-                drink = {}
-                drink['item_id'] = drink_info[0]
-                drink[drink_info[1]] = drink_info[2]
-                drinks.append(drink)
-
-            foodora_deliveries[delivery_id_info] = {}
-            foodora_deliveries[delivery_id_info]['address'] = address_info
-            foodora_deliveries[delivery_id_info]['order_details'] = {}
-            foodora_deliveries[delivery_id_info]['order_details']['pizzas'] = pizzas
-            foodora_deliveries[delivery_id_info]['order_details']['drinks'] = drinks
-            foodora_deliveries[delivery_id_info]['order_details']['drinks'] = drinks
-            foodora_deliveries[delivery_id_info]['order_details']['address'] = order_address_info
-            foodora_deliveries[delivery_id_info]['order_details']['price'] = order_price
-            
-    return foodora_deliveries
+    return system.foodora_deliveries_toCSV()
 
 @app.route('/get-full-menu', methods=['GET'])
 def get_full_menu():
@@ -125,7 +80,7 @@ def order_a_pizza():
 
 @app.route('/order-a-drink', methods = ['POST'])
 def order_a_drink():
-    # curl localhost:5000/order-a-drink -d '{"order_number": 2, "drink": {"type": "Diet Coke", "number": 2}}' -H 'Content-Type: application/json'
+    # curl localhost:5000/order-a-drink -d '{"order_number": 1, "drink": {"type": "Diet Coke", "number": 2}}' -H 'Content-Type: application/json'
     data = request.get_json()
     order_number = data['order_number']
     order = system.orders.details[order_number]
@@ -179,13 +134,12 @@ def set_address():
     order_number = data["order_number"]
     address = data["address"]
     system.orders.details[order_number].set_address(address)
-    with open('orders.json', 'w') as f:
-        json.dump(system.orders.toJSON(), f)
+    system.update_data()
     return 'success'
 
 @app.route('/set-delivery', methods = ['POST'])
 def set_delivery():
-    # curl localhost:5000/set-delivery -d '{"order_number": 1, "delivery": "uber"}' -H 'Content-Type: application/json'
+    # curl localhost:5000/set-delivery -d '{"order_number": 1, "delivery": "foodora"}' -H 'Content-Type: application/json'
     data = request.get_json()
     order_number = data["order_number"]
     order = system.orders.details[order_number]
@@ -193,7 +147,7 @@ def set_delivery():
     if(delivery == "uber"):
         system.add_uber(order)
     elif(delivery == "foodora"):
-        return
+        system.add_foodora(order)
     system.update_data()
     return 'success'
 

@@ -13,3 +13,8 @@ class Drink(Item):
       result[this.type] = this.number
       result['item_id'] = this.item_id
       return result
+
+   def toCSV(this):
+      result = ''
+      result = str(this.item_id) + "-" + this.type + "-" + str(this.number)
+      return result
