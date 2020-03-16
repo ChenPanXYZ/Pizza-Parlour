@@ -10,16 +10,16 @@ def get_json(address):
 
 class TestPizzaParlour(unittest.TestCase):
     
-    # def test_pizza(self):
-    #     response = app.test_client().get('/pizza')
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(response.data, b'Welcome to Pizza Planet!')
+    def test_pizza(self):
+        response = app.test_client().get('/pizza')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, b'Welcome to Pizza Planet!')
   
-    #def test_empty_json(self):
-    #    empty_dic = {}
-    #    with open('../orders.json', 'w') as f:
-    #        json.dump(empty_dic, f)
-    #    self.assertEqual(get_json('../orders.json'), empty_dic) 
+    def test_empty_json(self):
+       empty_dic = {}
+       with open('../orders.json', 'w') as f:
+           json.dump(empty_dic, f)
+       self.assertEqual(get_json('../orders.json'), empty_dic)
 
     def test_make_new_order(self):
 
@@ -120,6 +120,7 @@ class TestPizzaParlour(unittest.TestCase):
             if s != "\n":
                 dic_text = dic_text + s
         dict_got = json.loads(dic_text)
+        return dict_got
         self.assertEqual(dict_got,get_json("../menu.json"))
 #def test_pizza():
 #    response = app.test_client().get('/pizza')
