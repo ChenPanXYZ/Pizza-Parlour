@@ -1,1 +1,1 @@
-{"1": {"pizzas": [{"size": "M", "type": "pepperoni", "toppings": {"olives": 2, "tomatoes": 1}, "number": 2, "item_id": 1}], "drinks": [{"Diet Coke": 2, "item_id": 1}], "address": "855 dgsdg", "price": 24.0}, "2": {"pizzas": [], "drinks": [], "address": "", "price": 0}}
+{"1": {"pizzas": [], "drinks": [], "address": "", "price": 0}}

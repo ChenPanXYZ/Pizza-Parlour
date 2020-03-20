@@ -3,7 +3,6 @@ from flask import request
 import json
 import csv
 
-from classes.Test import Test
 from classes.Menu import Menu
 from classes.System import System
 from classes.Orders import Orders
@@ -12,13 +11,7 @@ app = Flask("Assignment 2")
 
 @app.route('/pizza')
 def welcome_pizza():
-    print("hello")
     return 'Welcome to Pizza Planet!'
-
-
-@app.route('/test', methods=['POST'])
-def test():
-    return system.foodora_deliveries_toCSV()
 
 @app.route('/get-full-menu', methods=['GET'])
 def get_full_menu():
@@ -154,19 +147,6 @@ def set_delivery():
 @app.route('/check-all-uber-delivery', methods = ['POST'])
 def check_all_uber_delivery():
     return system.deliveriesTOJSON()
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # curl localhost:5000/new-order -d '{"pizzas": [{"size": "M", "type": "pepperoni", "toppings": {"olives": 2, "tomatoes": 1}}], "drinks": {"Coke": 1, "Diet Coke":2, "Coke Zero":3}}' -H 'Content-Type: application/json'
 
