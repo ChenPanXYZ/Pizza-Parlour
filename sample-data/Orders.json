@@ -1,0 +1,23 @@
+[
+    {
+        "order_number": 1,
+        "pizzas": [
+            {
+                "item_id": 1,
+                "size": "M",
+                "type": "pepperoni",
+                "toppings": {"olives": 3},
+                "number": 1
+            }
+        ],
+        "drinks": [
+            {
+                "item_id": 1,
+                "drink_name": "Coke",
+                "number": 2
+            }
+        ],
+        "address": "855 Huntingwood Dr",
+        "price": 20
+    }
+]

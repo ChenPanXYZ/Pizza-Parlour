@@ -1,80 +1,73 @@
 import json
+from classes.Item import Item
 from classes.Pizza import Pizza
 from classes.Drink import Drink
-from classes.Item import Item
-
 class Order:
-    def __init__(this, order_number):
+    def __init__(this, order, menu):
+        this.order_number = order["order_number"]
+        this.price = 0
+        this.address = order["address"]
         this.pizzas = []
         this.drinks = []
-        this.order_number = order_number
-        this.price = 0
-        this.address = ''
+        for pizza in order["pizzas"]:
+            this.add_pizza(pizza, menu)
+        for drink in order["drinks"]:
+            this.add_drink(drink, menu)
 
+    
+    # Pizza Part
     def add_pizza(this, new_pizza, menu):
+        pizza = this.check_pizza_already_exist(new_pizza)
+        if pizza != None:
+            this.price -= pizza.get_price(menu)
+            pizza.number += new_pizza["number"]
+            this.price += pizza.get_price(menu)
+            return "Added Successfully."
+        else:
+            # Register a new pizza
+            if("item_id" not in new_pizza):
+                new_pizza["item_id"] = unique_key_maker(this.pizzas)
+            pizza = Pizza(new_pizza)
+            this.price += pizza.get_price(menu)
+            this.pizzas.append(pizza)
+
+    def check_pizza_already_exist(this, new_pizza):
         for pizza in this.pizzas:
-            if(pizza.type == new_pizza['type'] and pizza.size == new_pizza['size'] and pizza.toppings == new_pizza['toppings']):
-                this.price -= pizza.get_price(menu)
-                pizza.number += new_pizza["number"]
-                this.price += pizza.get_price(menu)
-                return
+            if pizza.type == new_pizza['type'] and pizza.size == new_pizza['size'] and pizza.toppings == new_pizza['toppings']:
+                return pizza
+        return None
+        
 
-        new_item_id = (len(this.pizzas) + 1)
+    # Drink Part
+    def add_drink(this, new_drink, menu):
+        drink = this.check_drink_already_exist(new_drink)
+        if drink != None:
+            this.price -= drink.get_price(menu)
+            drink.number += drink["number"]
+            this.price += drink.get_price(menu)
+            return "Added Successfully."
+        else:
+            if("item_id" not in new_drink):
+                new_drink["item_id"] = unique_key_maker(this.drinks)
+            drink = Drink(new_drink)
+            this.price += drink.get_price(menu)
+            this.drinks.append(drink)
 
-        new_pizza = Pizza(new_pizza, new_item_id)
-        this.price += new_pizza.get_price(menu)
-        this.pizzas.append(new_pizza)
-
-    def change_pizza(this, changed_pizza, menu):
-        for pizza in this.pizzas:
-            if (pizza.item_id == changed_pizza["item_id"]):
-                this.price -= pizza.get_price(menu)
-                if "size" in changed_pizza:
-                    pizza.size = changed_pizza["size"]
-                if "type" in changed_pizza:
-                    pizza.type = changed_pizza["type"]
-                if "toppings" in changed_pizza:
-                    for topping in changed_pizza["toppings"]:
-                        pizza.toppings[topping] = changed_pizza["toppings"][topping]
-                        if pizza.toppings[topping] == 0:
-                            pizza.toppings.pop(topping)
-                if "number" in changed_pizza:
-                    pizza.number = changed_pizza["number"]
-
-                this.price += pizza.get_price(menu)
-                if pizza.number == 0:
-                    this.pizzas.remove(pizza)
-                return
-                
-
-    def add_drink(this, type, number, menu):
+    def check_drink_already_exist(this, new_drink):
         for drink in this.drinks:
-            if (drink.type == type):
-                this.price -= drink.get_price(menu)
-                drink.number += number
-                this.price += drink.get_price(menu)
-                return
+            if(drink.type == new_drink["drink_name"]):
+                return drink
+        return None
 
-        new_item_id = (len(this.drinks) + 1)
-        new_drink = Drink(type, number, new_item_id)
-        this.price += new_drink.get_price(menu)
-        this.drinks.append(new_drink)
-
-    def change_drink(this, changed_drink, menu):
-        for drink in this.drinks:
-            if (drink.item_id == changed_drink["item_id"]):
-                this.price -= drink.get_price(menu)
-                drink.number = changed_drink["number"]
-                this.price += drink.get_price(menu)
-                if drink.number == 0:
-                    this.drinks.remove(drink)
-                return
-
-    def set_address(this, address):
-        this.address = address
+    
+    def unique_key_maker(dict_list):
+        # The list consists of dicts.
+        seq = [x["item_id"] for x in dict_list]
+        return max(seq) + 1
 
     def toJSON(this):
         result = {}
+        result["order_number"] = this.order_number
         result['pizzas'] = []
         for pizza in this.pizzas:
             result['pizzas'].append(pizza.toJSON())
@@ -85,27 +78,6 @@ class Order:
         result['price'] = this.price
         return result
 
-    def toCSV(this):
-        result = ''
-        i = 0
-        for pizza in this.pizzas:
-            result += pizza.toCSV()
-            if(i != len(this.pizzas) - 1):
-                result += '|'
-            
-            i = i + 1
 
 
-        result = result + ','
-        i = 0
-        for drink in this.drinks:
-            result+= drink.toCSV()
-            if(i != len(this.pizzas) - 1):
-                result += '|'
-            
-            i = i + 1
-
-        result = result + ','
-
-        result = result + this.address + "," + str(this.price) + "," + str(this.order_number)
-        return result
+    
