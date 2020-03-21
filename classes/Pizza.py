@@ -5,7 +5,7 @@ class Pizza(Item):
         this.toppings = pizza["toppings"]
         this.number = pizza["number"]
         this.item_id = pizza["item_id"]
-        super().__init__(pizza["type"])
+        Item.__init__(this, pizza["type"])
 
     def get_price(this, menu):
         price = 0

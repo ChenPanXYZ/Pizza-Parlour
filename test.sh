@@ -10,4 +10,4 @@ cp sample-data/Orders.json data
 cp sample-data/Types.json data
 cp sample-data/Uber.json data
 
-python -m pytest tests/
+python -m pytest -vv tests/
