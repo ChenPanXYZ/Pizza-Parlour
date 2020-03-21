@@ -6,12 +6,11 @@
             "L": 1.5
             }, 
             "type": {
-                "pepperoni": 2, "margherita": 3, "vegetarian": 4, "Neapolitan": 1, "Yuwan": 2, 
-                "NewType": 5
+                "pepperoni": 8, "margherita": 6, "vegetarian": 14.5, "Neapolitan": 9
                 }, 
                 "topping": 
                 {
-                    "olives": 3, "tomatoes": 1, "mushrooms": 2, "jalapenos": 6, "chicken": 2.0, "beef": 4.3, "pepperoni": 2.5
+                    "olives": 3, "tomatoes": 1, "mushrooms": 2, "jalapenos": 6, "chicken": 2, "beef": 4.5, "pepperoni": 2.5
                 }
         }, "drink": 
         {
