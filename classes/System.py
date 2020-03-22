@@ -25,8 +25,8 @@ class System:
 
         this.menu.content['pizza']['type'][type_name] = new_type_price
         this.file_dealer.write_to_types(this.types)
-        this.file_dealer.write_to_menu(this.menu.toJSON())
-        return this.menu.toJSON()
+        this.file_dealer.write_to_menu(this.menu.content)
+        return this.menu.content
 
 
     def make_a_new_order(this):
@@ -111,6 +111,7 @@ class System:
             new_delivery_id = max(this.deliveries['uber'], key=str)
             new_delivery_id = new_delivery_id[0: 5] + str(int(new_delivery_id[5:]) + 1)
         this.deliveries['uber'][new_delivery_id] = Uber(order)
+        return new_delivery_id
 
     def add_foodora(this, order):
         if(not this.deliveries['foodora']):
@@ -120,6 +121,7 @@ class System:
 
             new_delivery_id = new_delivery_id[0: 8] + str(int(new_delivery_id[8:]) + 1)
         this.deliveries['foodora'][new_delivery_id] = Foodora(order)
+        return new_delivery_id
 
 
     # ToJSON helpers

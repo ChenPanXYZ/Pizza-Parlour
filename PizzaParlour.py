@@ -10,7 +10,6 @@ system = System()
 def welcome_pizza():
     return 'Welcome to Pizza Planet!'
 
-
 # Order Part
 @app.route('/make-a-new-order', methods = ['POST'])
 def make_a_new_order():
@@ -50,7 +49,7 @@ def show_all_orders():
 @app.route('/order-a-pizza', methods = ['POST'])
 def order_a_pizza():
     # Route For Ordering a piazza
-    # Sample cURL: curl localhost:5000/order-a-pizza -d '{"order_number": 3, "pizza": {"number": 1, "size": "L", "type": "margherita", "toppings": {"beef": 2, "tomatoes": 1}}}' -H 'Content-Type: application/json'
+    # Sample cURL: curl localhost:5000/order-a-pizza -d '{"order_number": 1, "pizza": {"number": 1, "size": "S", "type": "vegetarian", "toppings": {"beef": 2, "tomatoes": 1, "pepperoni": 1, "jalapenos": 2}}}' -H 'Content-Type: application/json'
     data = request.get_json()
     order = system.find_order_by_order_number(data['order_number'])
     if order is None:
@@ -80,11 +79,10 @@ def order_a_drink():
     system.update_data()
     return jsonify(added_drink.toJSON())
 
-
 @app.route('/change-an-order', methods = ['POST'])
 def change_an_order():
     # Route When the User wants to change the order.
-    # Sample cURL: curl localhost:5000/change-an-order -d '{"order_number": 1, "pizzas": [{"item_id": 1, "size": "L", "toppings": {"olives": 0}}], "drinks": []}' -H 'Content-Type: application/json'
+    # Sample cURL: curl localhost:5000/change-an-order -d '{"order_number": 4, "pizzas": [{"item_id": 1, "size": "S", "type": "vegetarian"}], "drinks": []}' -H 'Content-Type: application/json'
     # User need to provide the order_number they want to change, the item_id for pizzas or drinks they are going to modify.
     # Note that since each pizza has a type, that has a specific preparation method. Hence, if the user is going to decreasing the toppings, we will check if it still meets the minimum requirement for that type of pizza. If not, we will send back a response that saying the update doesn't finish because the preparation method can not be done with those toppings.
     data = request.get_json()
@@ -113,14 +111,16 @@ def set_delivery():
     data = request.get_json()
     order_number = data["order_number"]
     order = system.find_order_by_order_number(order_number)
+    if order is None:
+        return 'The Order Number doesn\'t exist.'
     delivery = data["delivery"]
+    new_delivery_id = ""
     if(delivery == "uber"):
-        system.add_uber(order)
+        new_delivery_id = system.add_uber(order)
     elif(delivery == "foodora"):
-        system.add_foodora(order)
+        new_delivery_id = system.add_foodora(order)
     system.update_data()
-    return 'success'
-
+    return new_delivery_id
 
 # Menu Part
 @app.route('/get-full-menu')
@@ -131,11 +131,10 @@ def get_full_menu():
 
     return jsonify(system.menu.get_full_content())
 
-
 @app.route('/get-price-for-specific-item', methods=['POST'])
 def get_price_for_specific_item():
     # Route For Checking the price for a specific item
-    # Sample cURL: curl localhost:5000/get-price-for-specific-item -d '{"item": "Coke"}' -H 'Content-Type: application/json'
+    # Sample cURL: curl localhost:5000/get-price-for-specific-item -d '{"item": "pepperoni"}' -H 'Content-Type: application/json'
     # Expected Ourput: The price of that item. Here, $2.
     data = request.get_json()
     result = system.menu.get_price_for_specific_item(data['item'])
@@ -143,7 +142,6 @@ def get_price_for_specific_item():
         return "The Item doesn\'t exist."
     else:
         return jsonify(system.menu.get_price_for_specific_item(data['item']))
-
 
 @app.route('/add-new-type', methods = ['POST'])
 def add_new_type():
@@ -162,8 +160,8 @@ def change_price_for_item():
         return "The Item doesn\'t exist."
     else:
         system.update_data()
-        system.file_dealer.write_to_menu(system.menu.toJSON())
-        return jsonify(system.menu.toJSON())
+        system.file_dealer.write_to_menu(system.menu.content)
+        return jsonify(system.menu.content)
 
 
 if __name__ == "__main__":

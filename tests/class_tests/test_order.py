@@ -1,3 +1,8 @@
+import sys, os
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '/../')
+
+
 import json
 from classes.Order import Order
 from classes.Item import Item

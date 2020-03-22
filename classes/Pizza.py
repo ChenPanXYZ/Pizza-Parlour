@@ -13,7 +13,7 @@ class Pizza(Item):
         #type_price = menu.get_price_for_specific_item(this.type)
         toppings_price = 0
         for topping in this.toppings:
-            toppings_price += menu.get_price_for_specific_item(topping) * this.toppings[topping]
+            toppings_price += (menu.get_price_for_specific_item(topping) * this.toppings[topping])
         
         return size_ratio * toppings_price * this.number
         

@@ -53,12 +53,13 @@ class Order:
                 if "size" in change_pizza:
                     pizza.size = change_pizza["size"]
                 if "type" in change_pizza:
-                    # Since type is changed, need to change 
+                    # Since type is changed, need to change
+                    delete_toppings = []
                     for topping in pizza.toppings:
                         if topping in method[pizza.type]:
                             pizza.toppings[topping] -= method[pizza.type][topping]
-                            if pizza.toppings[topping] == 0:
-                                pizza.toppings.remove(topping)
+                    pizza.toppings = {k: v for k, v in pizza.toppings.items() if v != 0}
+                    pizza.type = change_pizza["type"]
                     for topping in method[pizza.type]:
                         if topping not in pizza.toppings:
                             pizza.toppings[topping] = method[pizza.type][topping]
@@ -82,9 +83,6 @@ class Order:
                         return
                 this.price += pizza.get_price(menu)
                 return
-
-        
-
     # Drink Part
     def add_drink(this, new_drink, menu):
         drink = this.check_drink_already_exist(new_drink)
@@ -117,7 +115,6 @@ class Order:
                     this.drinks.remove(drink)
                 return
 
-    
     def unique_key_maker(this, dict_list):
         # The list consists of dicts.
         if(not dict_list):

@@ -11,7 +11,7 @@ def test_filerdealer_load_menu():
             "L": 1.5
             }, 
             "type": {
-                "pepperoni": 8, "margherita": 6, "vegetarian": 14.5, "Neapolitan": 9
+                "pepperonis": 8, "margherita": 6, "vegetarian": 14.5, "Neapolitan": 9
                 }, 
                 "topping": 
                 {
@@ -33,7 +33,7 @@ def test_filerdealer_load_menu():
 
 def test_filerdealer_load_orders():
     after = file_dealer.load_orders()
-    expected = [{"order_number": 1, "pizzas": [{"size": "L", "type": "pepperoni", "toppings": {"olives": 4, "tomatoes": 1, "mushrooms": 1}, "number": 1, "item_id": 1}], "drinks": [{"item_id": 1, "drink_name": "Pepsi", "number": 2}], "address": "100 Street", "price": 26.5}, {"order_number": 2, "pizzas": [], "drinks": [{"item_id": 1, "drink_name": "Diet Coke", "number": 5}], "address": "", "price": 15}, {"order_number": 3, "pizzas": [{"size": "L", "type": "margherita", "toppings": {"beef": 2, "tomatoes": 1, "chicken": 3}, "number": 1, "item_id": 1}], "drinks": [], "address": "200 Street", "price": 24.0}]
+    expected = [{"order_number": 1, "pizzas": [{"size": "L", "type": "pepperonis", "toppings": {"olives": 4, "tomatoes": 1, "mushrooms": 1}, "number": 1, "item_id": 1}], "drinks": [{"item_id": 1, "drink_name": "Pepsi", "number": 2}], "address": "100 Street", "price": 26.5}, {"order_number": 2, "pizzas": [], "drinks": [{"item_id": 1, "drink_name": "Diet Coke", "number": 5}], "address": "", "price": 15}, {"order_number": 3, "pizzas": [{"size": "L", "type": "margherita", "toppings": {"beef": 2, "tomatoes": 1, "chicken": 3}, "number": 1, "item_id": 1}], "drinks": [], "address": "200 Street", "price": 24.0}]
     assert after == expected
 
 
@@ -55,7 +55,7 @@ def test_filerdealer_load_foodora_csv():
                             'tomatoes': 1,
                             'mushrooms': 1
                         }, 
-                        'type': 'pepperoni', 
+                        'type': 'pepperonis', 
                         'number': 1, 
                         'size': 'L'
                     }
@@ -76,7 +76,7 @@ def test_filerdealer_load_foodora_csv():
     assert after == expected
 
 def test_filerdealer_load_types():
-    expected = {"pepperoni": {"olives": 2, "mushrooms": 1}, "margherita": {"chicken": 3}, "vegetarian": {"jalapenos": 2, "pepperoni": 1}, "Neapolitan": {"beef": 2}, "New": {"beef": 10, "chicken": 1}}
+    expected = {"pepperonis": {"olives": 2, "mushrooms": 1}, "margherita": {"chicken": 3}, "vegetarian": {"jalapenos": 2, "pepperoni": 1}, "Neapolitan": {"beef": 2}, "New": {"beef": 10, "chicken": 1}}
     after = file_dealer.load_types()
     assert after == expected
 

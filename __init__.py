@@ -1,1 +1,0 @@
-from .PizzaParlour import app
