@@ -39,7 +39,7 @@ def cancel_order():
     if result == 400:
         return 'The Order Number doesn\'t exist.'
     else:
-        return 'Cancelled'
+        return jsonify(system.OrdersToJSON())
 
 
 @app.route('/show-all-orders', methods = ['GET'])
@@ -53,6 +53,8 @@ def order_a_pizza():
     # Sample cURL: curl localhost:5000/order-a-pizza -d '{"order_number": 3, "pizza": {"number": 1, "size": "L", "type": "margherita", "toppings": {"beef": 2, "tomatoes": 1}}}' -H 'Content-Type: application/json'
     data = request.get_json()
     order = system.find_order_by_order_number(data['order_number'])
+    if order is None:
+        return 'The Order Number doesn\'t exist.'
 
     
     for topping in system.types[data['pizza']['type']]:
@@ -61,9 +63,9 @@ def order_a_pizza():
         else:
             data['pizza']['toppings'][topping] = system.types[data['pizza']['type']][topping]
 
-    order.add_pizza(data['pizza'], system.menu)
+    added_pizza = order.add_pizza(data['pizza'], system.menu)
     system.update_data()
-    return jsonify(data['order_number'])
+    return jsonify(added_pizza.toJSON())
 
 
 @app.route('/order-a-drink', methods = ['POST'])
@@ -71,13 +73,12 @@ def order_a_drink():
     # Route For Ordering a drink (any number of it)
     # Sample cURL: curl localhost:5000/order-a-drink -d '{"order_number": 2, "drink": {"drink_name": "Diet Coke", "number": 5}}' -H 'Content-Type: application/json'
     data = request.get_json()
-    order = {}
-    for old_order in system.orders:
-        if old_order.order_number == data["order_number"]:
-            order = old_order
-    order.add_drink(data["drink"], system.menu)
+    order = system.find_order_by_order_number(data['order_number'])
+    if order is None:
+        return 'The Order Number doesn\'t exist.'
+    added_drink = order.add_drink(data["drink"], system.menu)
     system.update_data()
-    return jsonify(data["order_number"])
+    return jsonify(added_drink.toJSON())
 
 
 @app.route('/change-an-order', methods = ['POST'])
@@ -99,13 +100,12 @@ def set_address():
     data = request.get_json()
     order_number = data["order_number"]
     address = data["address"]
-    order = {}
-    for old_order in system.orders:
-        if old_order.order_number == data["order_number"]:
-            order = old_order
+    order = system.find_order_by_order_number(data['order_number'])
+    if order is None:
+        return 'The Order Number doesn\'t exist.'
     order.set_address(address)
     system.update_data()
-    return 'success'
+    return order.toJSON()
 
 @app.route('/set-delivery', methods = ['POST'])
 def set_delivery():
@@ -138,7 +138,11 @@ def get_price_for_specific_item():
     # Sample cURL: curl localhost:5000/get-price-for-specific-item -d '{"item": "Coke"}' -H 'Content-Type: application/json'
     # Expected Ourput: The price of that item. Here, $2.
     data = request.get_json()
-    return jsonify(system.menu.get_price_for_specific_item(data['item']))
+    result = system.menu.get_price_for_specific_item(data['item'])
+    if result == -1:
+        return "The Item doesn\'t exist."
+    else:
+        return jsonify(system.menu.get_price_for_specific_item(data['item']))
 
 
 @app.route('/add-new-type', methods = ['POST'])
@@ -146,17 +150,20 @@ def add_new_type():
     # Route for adding a new type.
     # curl localhost:5000/add-new-type -d '{"name": "New", "method": {"beef": 10, "chicken": 1}}' -H 'Content-Type: application/json'
     data = request.get_json()
-    system.add_new_type(data)
-    return jsonify(data)
+    result = system.add_new_type(data)
+    return jsonify(result)
 
 @app.route('/change-price-for-item', methods = ['POST'])
 def change_price_for_item():
     # curl localhost:5000/change-price-for-item -d '{"item": "olives", "price": 5}' -H 'Content-Type: application/json'
     data = request.get_json()
-    system.menu.change_price_for_item(data["item"], data["price"], system.types)
-    system.update_data()
-    system.file_dealer.write_to_menu(system.menu.toJSON())
-    return "success"
+    result = system.menu.change_price_for_item(data["item"], data["price"], system.types)
+    if result == 400:
+        return "The Item doesn\'t exist."
+    else:
+        system.update_data()
+        system.file_dealer.write_to_menu(system.menu.toJSON())
+        return jsonify(system.menu.toJSON())
 
 
 if __name__ == "__main__":

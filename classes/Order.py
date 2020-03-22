@@ -31,7 +31,6 @@ class Order:
             this.price -= pizza.get_price(menu)
             pizza.number += new_pizza["number"]
             this.price += pizza.get_price(menu)
-            return "Added Successfully."
         else:
             # Register a new pizza
             if("item_id" not in new_pizza):
@@ -39,6 +38,7 @@ class Order:
             pizza = Pizza(new_pizza)
             this.price += pizza.get_price(menu)
             this.pizzas.append(pizza)
+        return pizza
 
     def check_pizza_already_exist(this, new_pizza):
         for pizza in this.pizzas:
@@ -99,6 +99,7 @@ class Order:
             drink = Drink(new_drink)
             this.price += drink.get_price(menu)
             this.drinks.append(drink)
+        return drink
 
     def check_drink_already_exist(this, new_drink):
         for drink in this.drinks:
@@ -148,24 +149,14 @@ class Order:
             result += pizza.toCSV()
             if(i != len(this.pizzas) - 1):
                 result += '|'
-            
             i = i + 1
-
-
         result = result + ','
         i = 0
         for drink in this.drinks:
             result+= drink.toCSV()
             if(i != len(this.drinks) - 1):
                 result += '|'
-            
             i = i + 1
-
         result = result + ','
-
         result = result + this.address + "," + str(this.price) + "," + str(this.order_number)
         return result
-
-
-
-    

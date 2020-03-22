@@ -26,6 +26,7 @@ class System:
         this.menu.content['pizza']['type'][type_name] = new_type_price
         this.file_dealer.write_to_types(this.types)
         this.file_dealer.write_to_menu(this.menu.toJSON())
+        return this.menu.toJSON()
 
 
     def make_a_new_order(this):

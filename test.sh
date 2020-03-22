@@ -16,6 +16,9 @@ cp sample-data/Uber.json data
 
 python PizzaParlour.py
 
+python -m pytest --cov-report term --cov=. tests/class_tests
+
+python PizzaParlour.py
 python -m pytest --cov-report term --cov=. tests/test_routes.py
 
 rm data/Foodora.csv
