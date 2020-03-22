@@ -11,3 +11,4 @@ cp sample-data/Types.json data
 cp sample-data/Uber.json data
 
 python -m pytest -vv tests/
+python -m pytest -vv tests/unit_tests.py
