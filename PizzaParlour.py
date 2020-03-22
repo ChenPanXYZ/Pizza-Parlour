@@ -88,7 +88,7 @@ def change_an_order():
 @app.route('/set-address', methods = ['POST'])
 def set_address():
     # Route When the User set an address for his / her order.
-    # Sample cURL: curl localhost:5000/set-address -d '{"order_number": 3, "address": "200 Street"}' -H 'Content-Type: application/json'
+    # Sample cURL: curl localhost:5000/set-address -d '{"order_number": 1, "address": "222 Street"}' -H 'Content-Type: application/json'
     data = request.get_json()
     order_number = data["order_number"]
     address = data["address"]
