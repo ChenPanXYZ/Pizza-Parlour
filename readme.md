@@ -1,8 +1,6 @@
 # Assignment 2: Pair Programming
-Pan Chen
-Jingjing Gu
 
-# Table of Contents
+## Table of Contents
 1. [Instruction](#introductions)
 2. [Data](#data)
 3. [Program Design](#program-design)
