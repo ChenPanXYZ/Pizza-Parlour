@@ -1,5 +1,0 @@
-{
-  "tests/test_drink.py::test_answer": true, 
-  "tests/test_routes.py": true, 
-  "tests/unit_tests.py": true
-}
