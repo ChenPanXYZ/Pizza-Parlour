@@ -6,7 +6,7 @@
 3. [Program Design](#program-design)
 4. [Functionality](#functionality)
 5. [Pair Programming](#pair-programming)
-6. [Code Craftsmanship](#code-raftsmanship)
+6. [Code Craftsmanship](#code-craftsmanship)
 7. [Other Stories](#other-stories)
 
 ## Instructions<a name="introductions"></a>
