@@ -107,7 +107,7 @@ def set_address():
 
 @app.route('/set-delivery', methods = ['POST'])
 def set_delivery():
-    # curl localhost:5000/set-delivery -d '{"order_number": 3, "delivery": "uber"}' -H 'Content-Type: application/json'
+    # curl localhost:5000/set-delivery -d '{"order_number": 1, "delivery": "uber"}' -H 'Content-Type: application/json'
     data = request.get_json()
     order_number = data["order_number"]
     order = system.find_order_by_order_number(order_number)
