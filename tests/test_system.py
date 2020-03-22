@@ -50,12 +50,12 @@ def test_add_uber():
     system.add_uber(order)
     assert system.uber_deliveries_toJSON() == {'Uber-1': {'order_details': {'price': 24.0, 'pizzas': [{'item_id': 1, 'toppings': {'chicken': 3, 'beef': 2, 'tomatoes': 1}, 'type': 'margherita', 'number': 1, 'size': 'L'}], 'order_number': 3, 'address': '200 Street', 'drinks': []}}, 'Uber-2': {'order_details': {'price': 15, 'pizzas': [], 'order_number': 2, 'address': '', 'drinks': [{'item_id': 1, 'number': 5, 'drink_name': 'Diet Coke'}]}}}
 
-def test_foodora_deliveries_toCSV():
-    system = System()
-    assert system.foodora_deliveries_toCSV() == ['Foodora-1,1-1-L-pepperoni-mushrooms-1-olives-4-tomatoes-1,1-Pepsi-2,100 Street,26.5,1']
+# def test_foodora_deliveries_toCSV():
+#     system = System()
+#     assert system.foodora_deliveries_toCSV() == ['Foodora-1,1-1-L-pepperoni-mushrooms-1-olives-4-tomatoes-1,1-Pepsi-2,100 Street,26.5,1']
 
-def test_add_foodora():
-    system = System()
-    order = system.find_order_by_order_number(2)
-    system.add_foodora(order)
-    assert system.foodora_deliveries_toCSV() == ['Foodora-2,,1-Diet Coke-5,,15,2', 'Foodora-1,1-1-L-pepperoni-mushrooms-1-olives-4-tomatoes-1,1-Pepsi-2,100 Street,26.5,1']
+# def test_add_foodora():
+#     system = System()
+#     order = system.find_order_by_order_number(2)
+#     system.add_foodora(order)
+#     assert system.foodora_deliveries_toCSV() == ['Foodora-2,,1-Diet Coke-5,,15,2', 'Foodora-1,1-1-L-pepperoni-mushrooms-1-olives-4-tomatoes-1,1-Pepsi-2,100 Street,26.5,1']

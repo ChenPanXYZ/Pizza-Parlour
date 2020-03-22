@@ -1,1 +1,1 @@
-{"New Type": {"beef": 3}, "vegetarian": {"jalapenos": 2, "pepperoni": 1}, "Neapolitan": {"beef": 2}, "pepperoni": {"mushrooms": 1, "olives": 2}, "New": {"chicken": 1, "beef": 10}, "margherita": {"chicken": 3}}
+{"pepperoni": {"olives": 2, "mushrooms": 1}, "margherita": {"chicken": 3}, "vegetarian": {"jalapenos": 2, "pepperoni": 1}, "Neapolitan": {"beef": 2}, "New": {"beef": 10, "chicken": 1}}

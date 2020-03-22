@@ -5,7 +5,7 @@ import json
 from classes.System import System
 app = Flask("Assignment 2")
 
-
+system = System()
 @app.route('/pizza')
 def welcome_pizza():
     return 'Welcome to Pizza Planet!'
@@ -24,15 +24,22 @@ def check_order():
     # curl localhost:5000/check-order -d '{"order_number": 1}' -H 'Content-Type: application/json'
     data = request.get_json()
     order = system.find_order_by_order_number(data['order_number'])
-    return order.toJSON()
+    if order is None:
+        return 'The Order Number doesn\'t exist.'
+    else:
+        return jsonify(order.toJSON())
 
 @app.route('/cancel-order', methods=['POST'])
 def cancel_order():
     # curl localhost:5000/cancel-order -d '{"order_number": 1}' -H 'Content-Type: application/json'
     data = request.get_json()
-    system.cancel_order(data['order_number'])
+    result = system.cancel_order(data['order_number'])
     system.update_data()
-    return 'Cancelled'
+
+    if result == 400:
+        return 'The Order Number doesn\'t exist.'
+    else:
+        return 'Cancelled'
 
 
 @app.route('/show-all-orders', methods = ['GET'])
@@ -154,6 +161,5 @@ def change_price_for_item():
 
 if __name__ == "__main__":
     welcome_pizza()
-    system = System()
     system.update_data()
     app.run(debug=True, host='0.0.0.0')

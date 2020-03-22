@@ -41,6 +41,8 @@ class System:
 
     def change_an_order(this, order_number, pizzas, drinks):
         order = this.find_order_by_order_number(order_number)
+        if order is None:
+            return 400
         for pizza in pizzas:
             order.change_pizza(pizza, this.menu, this.types)
         for drink in drinks:
@@ -49,6 +51,8 @@ class System:
 
     def cancel_order(this, order_number):
         order = this.find_order_by_order_number(order_number)
+        if order is None:
+            return 400
         this.orders.remove(order)
         for uber_id, uber in this.deliveries['uber'].items():
             if uber.order_details == order:
