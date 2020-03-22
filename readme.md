@@ -4,9 +4,12 @@ Jingjing Gu
 
 # Table of Contents
 1. [Instruction](#introductions)
-2. [Example2](#example2)
-3. [Third Example](#third-example)
-4. [Fourth Example](#fourth-examplehttpwwwfourthexamplecom)
+2. [Data](#data)
+3. [Program Design](#program-design)
+4. [Functionality](#functionality)
+5. [Pair Programming](#pair-programming)
+6. [Code Craftsmanship](#code-raftsmanship)
+7. [Other Stories](#other-stories)
 
 ## Instructions<a name="introductions"></a>
 ### Running our program
@@ -21,13 +24,24 @@ You can choose to type the command line to do the test mannually, but we wrote t
 $ ./class_test.sh
 $ ./route_test.sh
 ```
+To manually input the test command:
+```
+$ cp sample-data/Menu.json sample-data/Orders.json sample-data/Types.json sample-data/Uber.json sample-data/Foodora.csv data
+$ python3 -m pytest --cov-config=.coverageforclasstest --cov-report term --cov=. tests/class_tests
+$cp sample-data/Menu.json sample-data/Orders.json sample-data/Types.json sample-data/Uber.json sample-data/Foodora.csv data
+$python3 PizzaParlour.py
+```
+Open another bash shell:
+```
+$ python3 -m pytest --cov-config=.coveragerc --cov-report term --cov=. tests/test_routes.py
+```
 The test results should look like this:
 #### Result For Class test
 ![enter image description here](https://www.chensnotes.com/wp-content/uploads/2020/03/12345.png)
 This doesn't cover 90% lines of the codes, but we will cover 90% lines of the codes with Route Test.
 #### Result For Route test
 ![enter image description here](https://www.chensnotes.com/wp-content/uploads/2020/03/123.png)
-## Database
+## Data<a name="data"></a>
 We use file-based database. We have five files that store the data. All the data files are in the **data** folder.
 
  - Orders.json: it stores all the orders' details.
@@ -38,7 +52,88 @@ We use file-based database. We have five files that store the data. All the data
 
 For test purpose, we predefined sample data. The sample data is stored in the **sample-data** folder.
 
-## Program design
+Sample data looks like:
+### Orders.json
+```
+[
+{"order_number": 1, "pizzas": [{"size": "L", "type": "pepperonis", "toppings": {"olives": 4, "tomatoes": 1, "mushrooms": 1}, "number": 1, "item_id": 1}], "drinks": [{"item_id": 1, "drink_name": "Pepsi", "number": 2}], "address": "100 Street", "price": 26.5}, 
+{"order_number": 2, "pizzas": [], "drinks": [{"item_id": 1, "drink_name": "Diet Coke", "number": 5}], "address": "", "price": 15}, 
+{"order_number": 3, "pizzas": [{"size": "L", "type": "margherita", "toppings": {"beef": 2, "tomatoes": 1, "chicken": 3}, "number": 1, "item_id": 1}], "drinks": [], "address": "200 Street", "price": 24.0}
+]
+```
+### Menu.json
+```
+{
+
+	"pizza": {
+
+		"size": {
+
+			"S": 0.8,
+
+			"M": 1.0,
+
+			"L": 1.5
+
+		},
+
+		"type": {
+
+		"pepperonis": 8, 
+		"margherita": 6, 
+		"vegetarian": 14.5, 
+		"Neapolitan": 9
+		},
+
+		"topping":
+
+		{
+			"olives": 3, 
+			"tomatoes": 1, 
+			"mushrooms": 2, 
+			"jalapenos": 6, 
+			"chicken": 2, 
+			"beef": 4.5, 
+			"pepperoni": 2.5
+		}
+
+	}, 
+	"drink":
+	{
+		"Coke": 2,
+		"Diet Coke": 3,
+		"Coke Zero": 4,
+		"Pepsi": 2,
+		"Diet Pepsi": 1,
+		"Dr. Pepper": 3,
+		"Water": 4,
+		"Juice": 2
+	}
+}
+```
+### Types.json
+```
+{
+"pepperonis": {"olives": 2, "mushrooms": 1}, 
+"margherita": {"chicken": 3}, 
+"vegetarian": {"jalapenos": 2, "pepperoni": 1}, 
+"Neapolitan": {"beef": 2}, 
+"New": {"beef": 10, "chicken": 1}}
+```
+### Uber.json
+```
+{"Uber-1": {"order_details": {"order_number": 3, "pizzas": [{"size": "L", "type": "margherita", "toppings": {"beef": 2, "tomatoes": 1, "chicken": 3}, "number": 1, "item_id": 1}], "drinks": [], "address": "200 Street", "price": 24.0}}}
+```
+### Foodora.csv
+```
+Foodora-1,1-1-L-pepperonis-olives-4-tomatoes-1-mushrooms-1,1-Pepsi-2,100 Street,26.5,1
+```
+To help you understand how the information is  stored in Foodora.csv:
+
+ - Each row stands for one Foodora Delivery.
+ - The format is: FoodoraID, ItemID-Number-Size-Type-Topping1-Number-Topping2-Number-Topping3-Number, itemID-Drink1-Number, itemID-Drink2-Number, Price, Address, Price, OrderNumber
+
+## Program design<a name="introductions"></a>
 ### Stucture of  our program
 ![enter image description here](https://www.chensnotes.com/wp-content/uploads/2020/03/structure.png)
 ### Relationships between objects
@@ -71,7 +166,7 @@ Also, the Singleton design pattern makes it possible that some objects can be ac
 4. We also applied the **Dependency Injection** design pattern. When a class has the instance of another class, we don't let the class to instantiate the instance. Instead, we have those objects initialized by other class and just pass it in. For instance, every Delievery has Order as this.order_details, instead of making Delievery to generate the instance, we let the system do the job and pass Order to Uber or Foodora.
 5. we also used **Factory Design** Pattern. To describe the order clearly, we create a ‘Pizza’ class and a ‘Drink’ class. Since they share the same attribute ‘Type’, we identify them as sub classes of an ‘Item’ class. ‘Type’ is the mere attribute of ‘Item’ class and is initialized at the time constructor of ‘Item’ is created, where ‘Pizza’ and ‘Drink’ have some other unique attributes and methods. ‘‘Order’ class is the factory where ‘Pizza’ and ‘Drink’ instances are created. It decides when to create either of them based on the different prompts that the consumer delivers, such as “Change_pizza” or “Add_drink”.
 
-## Functionality
+## Functionality<a name="functionality"></a>
 ### Required and Extra features
 #### Required features
 ##### Make a new order
@@ -94,6 +189,8 @@ Please note that:
 By giving the order number, the route cancel-order can remove the order.
 ##### Ask for pickup or delivery
 We have Uber.json and Foodora, with each containing the Delivery's order number, the adddress, and the order details. There is a function in System that loads the Uber and Foodora data into our program.
+For inhouse delivery, we do not have a separate file to store. All inhouse delivery will be stored in Orders.json.
+For pickup, it is the order without an address, it is also stored in Orders.json.
 ##### Ask for the menu
 We have two routes. get-full-menu will simply return the full menu. get-price-for-specific-item will return the price by the item name.
 ##### Change the price for an item
@@ -165,7 +262,7 @@ $ curl localhost:5000/add-new-type -d '{"name": "New", "method": {"beef": 10, "c
 $ curl localhost:5000/change-price-for-item -d '{"item": "olives", "price": 5}' -H 'Content-Type: application/json'
 ```
 
-## Pair Programming
+## Pair Programming<a name="pair-progarmming"></a>
 ### Pair-programmed features
 We did pair programming for every part of the assignment, except the readme, test shell scripts.
 
@@ -204,9 +301,9 @@ Based on the jobs allocation mentioned before, the one who was programming is th
    more coding jobs than the other, which means that he is doing more
    jobs. The workload difference can be significant, depending on the
    skill gap between the pair.
-## Code Craftsmanship
+## Code Craftsmanship<a name="code-craftsmanship"></a>
 We used VS Code extension Code Spell Checker to check spelling errors, and Linters for code craftsmanship.
-## Other stories
+## Other stories<a name="other-stories"></a>
  - When we did the route test, we found that if we changed the Pizza
    type to "vegetarian", the new price was different. We started to
    doubt that there was some issues regarding calculation. We spent like
