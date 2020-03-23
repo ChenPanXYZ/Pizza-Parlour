@@ -140,19 +140,19 @@ Our Draft for Design (UML graph)
 
 ### Function design
 When dicussing about the function design, we turned to the real world. We believed each class in our program should "make sense" as a real world Object and do its job accordingly. 
-We imagine the flask routes as the the "conversasions" between the Customers and the Waiters. The System is like the Machine that the waiters operate with when he / she hears something from the customer, and the File Dealer is like pencil so that the waiter can write down details. And the Order is like the real order, having order_number (id), pizzas, drinks, address and price. And Pizza has size, type, and toppings, drink has its name, just like the real world.
+We imagine the flask routes as the "conversasions" between the Customers and the Waiters. The System is like the Machine that the waiters operate with when he / she hears something from the customer, and the File Dealer is like pencil so that the waiter can write down details. And the Order is like the real order, having order_number (id), pizzas, drinks, address and price. And Pizza has size, type, and toppings, drink has its name, just like the real world.
 So, for instance, here was how a function (add a pizza) was designed:
  - **We started image what is it like in the real world**
- - Customer: Hi (new conversation, Pizza Parlour is involed), **Waiter** (System is involed), I am ready (Make a new order).
+ - Customer: Hi (new conversation, Pizza Parlour is involved), **Waiter** (System is involved), I am ready (Make a new order).
  - Waiter: OK (write down the **order number**), what do you want?
- - Customer: I'd like one pizza (**Pizza** is involed), large size, vegetarian, with two extra tomatoes.
- - Waiter: writing down the details. (**File Dealer** is involed).
- - Customer: And I'd like to use Uber (**Uber** is involed), my address is ABC.
- - Waiter: writing down the details. (**File Dealer** is involed).
+ - Customer: I'd like one pizza (**Pizza** is involved), large size, vegetarian, with two extra tomatoes.
+ - Waiter: writing down the details. (**File Dealer** is involved).
+ - Customer: And I'd like to use Uber (**Uber** is involved), my address is ABC.
+ - Waiter: writing down the details. (**File Dealer** is involved).
  - Waiter: Is that all for today?
  - Customer: Yes, that's all.
- - Waiter: OK, thank you! Your order is on the way. (System is involed, update the status.) 
-That's basically how we design the functions, we connect our functions with the real world, find out which parts are involed, what kind of data is needed.
+ - Waiter: OK, thank you! Your order is on the way. (System is involved, update the status.) 
+That's basically how we design the functions, we connect our functions with the real world, find out which parts are involved, what kind of data is needed.
 
 The details of each function is in the **Functionality**. And how they work with each other is in the UML graph.
 
@@ -162,7 +162,7 @@ Also, the Singleton design pattern makes it possible that some objects can be ac
 2. We also applied the **Adapter** design pattern. We have a JSONWriter and a CSVWriter class, but none of the data can be understood by these two writers. So, before send dating to these two writers, we adapt the Object to JSON or CSV format.
 3. We also applied the **Observer** design pattern. That is, when a pizza or a drink or the address of an order is changed, the system will notify and update Uber and Foodora and update the data stored. Similarly, when adding a new type, the system will notify and update the menu and type.
 4. We also applied the **Dependency Injection** design pattern. When a class has the instance of another class, we don't let the class to instantiate the instance. Instead, we have those objects initialized by other class and just pass it in. For instance, every Delievery has Order as this.order_details, instead of making Delievery to generate the instance, we let the system do the job and pass Order to Uber or Foodora.
-5. we also used **Factory Design** Pattern. To describe the order clearly, we create a ‘Pizza’ class and a ‘Drink’ class. Since they share the same attribute ‘Type’, we identify them as sub classes of an ‘Item’ class. ‘Type’ is the mere attribute of ‘Item’ class and is initialized at the time constructor of ‘Item’ is created, where ‘Pizza’ and ‘Drink’ have some other unique attributes and methods. ‘‘Order’ class is the factory where ‘Pizza’ and ‘Drink’ instances are created. It decides when to create either of them based on the different prompts that the consumer delivers, such as “Change_pizza” or “Add_drink”.
+5. we also used **Factory Design** Pattern. To describe the order clearly, we create a ‘Pizza’ class and a ‘Drink’ class. Since they share the same attribute ‘Type’, we identify them as sub classes of an ‘Item’ class. ‘Type’ is the mere attribute of ‘Item’ class and is initialized at the time constructor of ‘Item’ is created, where ‘Pizza’ and ‘Drink’ have some other unique attributes and methods. ‘Order’ class is the factory where ‘Pizza’ and ‘Drink’ instances are created. It decides when to create either of them based on the different prompts that the consumer delivers, such as “Change_pizza” or “Add_drink”.
 
 ## Functionality<a name="functionality"></a>
 ### Required and Extra features
@@ -204,7 +204,7 @@ Although not required by the handout, we think it makes more sense to store the 
 
 #### Future Features
 ##### Stauts for the order
-Because we used Oberver design pattern, now if we update an order or change the price of an item, it will notify Order, Uber, and Foodora to update their data as well. We want, in the future, we will added another attritute to each order, called "status". So, if the status of an order is "delivering" or "completed", we won't update their data.
+Because we used Observer design pattern, now if we update an order or change the price of an item, it will notify Order, Uber, and Foodora to update their data as well. We want, in the future, we will added another attritute to each order, called "status". So, if the status of an order is "delivering" or "completed", we won't update their data.
 
 #### cURL examples
 ##### Make a new order
@@ -266,8 +266,8 @@ We did pair programming for every part of the assignment, except the readme, tes
 
 ### Driver and Navigator for the pair-programmed features
 We applied pair programming on each module of the PizzaParlour application.
-In general, **Pan Chen** managed to implement the controller classes of the applications, such as “System”, “Orders” and “Menu” class module, along with classes for three ways to send deliveries, which involves JSON and CSV input and output, i.e “Uber”,”Foodora” and “Delivery” classes. 
-Meanwhile, **Jingjing Gu** is assigned to finish the fundamental, factual classes such as “Drink”,”Pizza” and “Item”. 
+In general, **Pan Chen** managed to implement the controller classes of the applications, such as “System”, “Orders” and “Menu” class module, along with classes for three ways to send deliveries, which involves JSON and CSV input and output, i.e “Uber”,“Foodora” and “Delivery” classes. 
+Meanwhile, **Jingjing Gu** is assigned to finish the fundamental, factual classes such as “Drink”,“Pizza” and “Item”. 
 As for tests, they were done in two parts, tests for classes and tests for routes. Either of us created tests for the part he programs for. All the coding were done through pair programming.
 Based on the jobs allocation mentioned before, the one who was programming is the driver, and the other is the navigator. We used screen share feature on Skype to make drivers’ programming process available to the navigator, and the navigator could comment by voice in real time and provided support by pointing out errors or offering suggestions.
 ### Reflections on Pair Programming
