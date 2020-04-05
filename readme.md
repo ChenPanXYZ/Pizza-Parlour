@@ -225,19 +225,19 @@ $ curl localhost:5000/show-all-orders
 ```
 ##### Order a pizza
 ```
-$ curl localhost:5000/order-a-pizza -d '{"order_number": 1, "pizza": {"number": 1, "size": "S", "type": "vegetarian", "toppings": {"beef": 2, "tomatoes": 1, "pepperoni": 1, "jalapenos": 2}}}' -H 'Content-Type: application/json'
+$ curl --request PATCH localhost:5000/order-a-pizza -d '{"order_number": 1, "pizza": {"number": 1, "size": "S", "type": "vegetarian", "toppings": {"beef": 2, "tomatoes": 1, "pepperoni": 1, "jalapenos": 2}}}' -H 'Content-Type: application/json'
 ```
 ##### Order a drink
 ```
-$ curl localhost:5000/order-a-drink -d '{"order_number": 2, "drink": {"drink_name": "Diet Coke", "number": 5}}' -H 'Content-Type: application/json'
+$ curl --request PATCH localhost:5000/order-a-drink -d '{"order_number": 2, "drink": {"drink_name": "Diet Coke", "number": 5}}' -H 'Content-Type: application/json'
 ```
 ##### Change an order
 ```
-$ curl localhost:5000/change-an-order -d '{"order_number": 4, "pizzas": [{"item_id": 1, "size": "S", "type": "vegetarian"}], "drinks": []}' -H 'Content-Type: application/json'
+$ curl --request PATCH localhost:5000/change-an-order -d '{"order_number": 4, "pizzas": [{"item_id": 1, "size": "S", "type": "vegetarian"}], "drinks": []}' -H 'Content-Type: application/json'
 ```
 ##### Set address
 ```
-$ curl localhost:5000/set-address -d '{"order_number": 1, "address": "222 Street"}' -H 'Content-Type: application/json'
+$ curl --request PATCH localhost:5000/set-address -d '{"order_number": 1, "address": "222 Street"}' -H 'Content-Type: application/json'
 ```
 ##### Set delivery
 ```
@@ -257,7 +257,7 @@ $ curl localhost:5000/add-new-type -d '{"name": "New", "method": {"beef": 10, "c
 ```
 ##### Change price for item
 ```
-$ curl localhost:5000/change-price-for-item -d '{"item": "olives", "price": 5}' -H 'Content-Type: application/json'
+$ curl --request PATCH localhost:5000/change-price-for-item -d '{"item": "olives", "price": 5}' -H 'Content-Type: application/json'
 ```
 
 ## Pair Programming<a name="pair-progarmming"></a>
