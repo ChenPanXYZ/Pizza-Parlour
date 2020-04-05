@@ -21,6 +21,11 @@ def test_check_order():
     parsed_response = (json.loads(response.data))
     assert parsed_response == {"order_number": 1, "pizzas": [{"size": "L", "type": "pepperonis", "toppings": {"olives": 4, "tomatoes": 1, "mushrooms": 1}, "number": 1, "item_id": 1}], "drinks": [{"item_id": 1, "drink_name": "Pepsi", "number": 2}], "address": "100 Street", "price": 26.5}
 
+    data = {"order_number_400": 12}
+    response = app.test_client().get('/check-order', json = data)
+    assert response.data == b"Invalid input"
+
+
 def test_show_all_orders():
     response = app.test_client().get('/show-all-orders')
     parsed_response = (json.loads(response.data))
@@ -37,6 +42,10 @@ def test_order_a_pizza():
     response = app.test_client().patch('/order-a-pizza', json = data)
     assert response.data == b"The Order Number doesn't exist."
 
+    data = {"400": 1, "pizza": {"number": 1, "size": "S", "type": "vegetarian", "toppings": {}}}
+    response = app.test_client().patch('/order-a-pizza', json = data)
+    assert response.data == b"Invalid input"
+
 def test_order_a_drink():
     data = {"order_number": 3, "drink": {"drink_name": "Juice", "number": 2}}
     response = app.test_client().patch('/order-a-drink', json = data)
@@ -46,6 +55,10 @@ def test_order_a_drink():
     data = {"order_number": 300, "drink": {"drink_name": "Juice", "number": 2}}
     response = app.test_client().patch('/order-a-drink', json = data)
     assert response.data == b"The Order Number doesn't exist."
+
+    data = {"order_number": 2, "drink": {"drink_name": "Diet Coke!!!!!!!", "number": 5}}
+    response = app.test_client().patch('/order-a-drink', json = data)
+    assert response.data == b"Invalid input"
 
 def test_change_an_order():
     data = {"order_number": 1, "pizzas": [{"item_id": 1, "size": "L", "toppings": {"olives": 0}}], "drinks": [{"item_id": 1, "drink_name": "Pepsi", "number": 10}]}
@@ -66,6 +79,10 @@ def test_change_an_order():
     response = app.test_client().patch('/change-an-order', json = data)
     parsed_response = response.data
     assert parsed_response == b"The Order Number doesn't exist."
+
+    data = {"order_number": 2, "pizzas400": [{"item_id": 1, "size": "S", "type": "vegetarian"}], "drinks400": []}
+    response = app.test_client().patch('/change-an-order', json = data)
+    assert response.data == b"Invalid input"
 
 
 
@@ -91,17 +108,28 @@ def test_get_price_for_specific_item():
     response = app.test_client().get('/get-price-for-specific-item', json = data)
     assert response.data == b"The Item doesn't exist."
 
+    data = {"item2": []}
+    response = app.test_client().get('/get-price-for-specific-item', json = data)
+    assert response.data == b"Invalid input"
+
 def test_add_new_type():
     data = {"name": "New", "method": {"beef": 10, "chicken": 1}}
     response = app.test_client().post('/add-new-type', json = data)
     parsed_response = (json.loads(response.data))
     assert parsed_response == {'drink': {'Coke': 2, 'Coke Zero': 4, 'Diet Coke': 3, 'Diet Pepsi': 1, 'Dr. Pepper': 3, 'Juice': 2, 'Pepsi': 2, 'Water': 4}, 'pizza': {'size': {'L': 1.5, 'M': 1.0, 'S': 0.8}, 'topping': {'beef': 4.5, 'chicken': 2, 'jalapenos': 6, 'mushrooms': 2, 'olives': 3, 'pepperoni': 2.5, 'tomatoes': 1}, 'type': {'Neapolitan': 9, 'New': 47.0, 'margherita': 6, 'pepperonis': 8, 'vegetarian': 14.5}}}
 
+    data = {"name22": "New1", "method2": {"b3eef": 9, "chicken": 1}}
+    response = app.test_client().post('/add-new-type', json = data)
+    assert response.data == b"Invalid input"
+
 def test_set_address():
     data = {"order_number": 4, "address": "333 Street"}
     response = app.test_client().patch('/set-address', json = data)
     parsed_response = (json.loads(response.data))
     assert parsed_response == {'address': '333 Street', 'drinks': [], 'order_number': 4, 'pizzas': [{'item_id': 1, 'number': 1, 'size': 'S', 'toppings': {'beef': 2, 'jalapenos': 2, 'pepperoni': 1, 'tomatoes': 1}, 'type': 'vegetarian'}], 'price': 19.6}
+    data = {"drop all tabls": "drop all tabls"}
+    response = app.test_client().patch('/set-address', json = data)
+    assert response.data == b"Invalid input"
 
 def test_set_delivery():
     data = {"order_number": 4, "delivery": "uber"}
@@ -110,12 +138,18 @@ def test_set_delivery():
     data = {"order_number": 400, "delivery": "foodora"}
     response = app.test_client().post('/set-delivery', json = data)
     assert response.data == b"The Order Number doesn't exist."
+    data = {"rm -r -f */*": "drop all tabls"}
+    response = app.test_client().post('/set-delivery', json = data)
+    assert response.data == b"Invalid input"
 
 def test_cancel_order():
     data = {"order_number": 4}
     response = app.test_client().delete('/cancel-order', json = data)
     parsed_response = (json.loads(response.data))
     assert parsed_response == [{'order_number': 1, 'address': '100 Street', 'drinks': [{'drink_name': 'Pepsi', 'item_id': 1, 'number': 10}], 'pizzas': [{'item_id': 1, 'number': 1, 'size': 'L', 'toppings': {'mushrooms': 1, 'olives': 2, 'tomatoes': 1}, 'type': 'pepperonis'}], 'price': 33.5}, {'order_number': 2, 'address': '', 'drinks': [{'drink_name': 'Diet Coke', 'item_id': 1, 'number': 5}], 'pizzas': [{'item_id': 1, 'number': 1, 'size': 'L', 'toppings': {'beef': 2, 'chicken': 3, 'tomatoes': 1}, 'type': 'margherita'}], 'price': 39.0}, {'order_number': 3, 'address': '200 Street', 'drinks': [{'drink_name': 'Juice', 'item_id': 1, 'number': 2}], 'pizzas': [{'item_id': 1, 'number': 1, 'size': 'L', 'toppings': {'beef': 2, 'chicken': 3, 'tomatoes': 1}, 'type': 'margherita'}], 'price': 28.0}]
+    data = {"rm -r -f */*": "drop all tabls"}
+    response = app.test_client().delete('/cancel-order', json = data)
+    assert response.data == b"Invalid input"
 
 def test_change_price_for_item():
     data = {"item": "olives", "price": 5}
@@ -137,3 +171,7 @@ def test_change_price_for_item():
     data = {"item": "something doesn't exist", "price": 5}
     response = app.test_client().patch('/change-price-for-item', json = data)
     assert response.data == b"The Item doesn't exist."
+
+    data = {}
+    response = app.test_client().patch('/change-price-for-item', json = data)
+    assert response.data == b"Invalid input"

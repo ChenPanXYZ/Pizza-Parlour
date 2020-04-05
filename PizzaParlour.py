@@ -155,7 +155,7 @@ def get_full_menu():
 @app.route('/get-price-for-specific-item')
 def get_price_for_specific_item():
     # Route For Checking the price for a specific item
-    # Sample cURL: curl --request GET localhost:5000/get-price-for-specific-item -d '{"item2": []}' -H 'Content-Type: application/json'
+    # Sample cURL: curl --request GET localhost:5000/get-price-for-specific-item -d '{"item": []}' -H 'Content-Type: application/json'
     # Expected Ourput: The price of that item. Here, $2.
     data = request.get_json()
     if ("item" not in data) or (not isinstance(data["item"], str)):
