@@ -211,6 +211,15 @@ Because we used Observer design pattern, now if we update an order or change the
 ```
 $ curl localhost:5000/make-a-new-order -d '{}' -H 'Content-Type: application/json'
 ```
+###### ```POST```: Route to add a new order.
+**Route: /make-a-new-order
+
+**Request:** does not have a body
+
+**Response:**
+```
+Added Order ID
+```
 ##### Check an order (by order number)
 ```
 $ curl localhost:5000/check-order -d '{"order_number": 1}' -H 'Content-Type: application/json'

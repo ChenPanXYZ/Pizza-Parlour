@@ -20,8 +20,10 @@ def make_a_new_order():
 
 @app.route('/check-order')
 def check_order():
-    # curl localhost:5000/check-order -d '{"order_number": 1}' -H 'Content-Type: application/json'
+    # curl --request GET localhost:5000/check-order -d '{"order_number": 1}' -H 'Content-Type: application/json'
     data = request.get_json()
+    if "order_number" not in data:
+        return make_response('Invalid input', 400)
     order = system.find_order_by_order_number(data['order_number'])
     if order is None:
         return make_response('The Order Number doesn\'t exist.', 404)
@@ -30,8 +32,10 @@ def check_order():
 
 @app.route('/cancel-order', methods=['DELETE'])
 def cancel_order():
-    # curl localhost:5000/cancel-order -d '{"order_number": 1}' -H 'Content-Type: application/json'
+    # curl --request DELETE localhost:5000/cancel-order -d '{"order_number": 1}' -H 'Content-Type: application/json'
     data = request.get_json()
+    if "order_number" not in data:
+        return make_response('Invalid input', 400)
     result = system.cancel_order(data['order_number'])
     system.update_data()
 
@@ -51,6 +55,8 @@ def order_a_pizza():
     # Route For Ordering a piazza
     # Sample cURL: curl --request PATCH localhost:5000/order-a-pizza -d '{"order_number": 1, "pizza": {"number": 1, "size": "S", "type": "vegetarian", "toppings": {"beef": 2, "tomatoes": 1, "pepperoni": 1, "jalapenos": 2}}}' -H 'Content-Type: application/json'
     data = request.get_json()
+    # if "order_number" not in data or pizza not in data or number not in data["pizza"] or size not in :
+    #     return make_response('Invalid input', 400)
     order = system.find_order_by_order_number(data['order_number'])
     if order is None:
         return make_response('The Order Number doesn\'t exist.', 404)
