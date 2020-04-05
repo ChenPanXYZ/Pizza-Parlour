@@ -8,10 +8,10 @@
             "type": {
                 "pepperonis": 8, "margherita": 6, "vegetarian": 14.5, "Neapolitan": 9
                 }, 
-                "topping": 
-                {
-                    "olives": 3, "tomatoes": 1, "mushrooms": 2, "jalapenos": 6, "chicken": 2, "beef": 4.5, "pepperoni": 2.5
-                }
+            "topping": 
+            {
+                "olives": 3, "tomatoes": 1, "mushrooms": 2, "jalapenos": 6, "chicken": 2, "beef": 4.5, "pepperoni": 2.5
+            }
         }, "drink": 
         {
             "Coke": 2, 

@@ -53,13 +53,13 @@ def show_all_orders():
 @app.route('/order-a-pizza', methods = ['PATCH'])
 def order_a_pizza():
     # Route For Ordering a piazza
-    # Sample cURL: curl --request PATCH localhost:5000/order-a-pizza -d '{"order_number": 1, "pizza": {"number": 1, "size": "S", "type": "vegetarian", "toppings": {"beef": 2, "tomatoes": 1, "pepperoni": 1, "jalapenos": 2}}}' -H 'Content-Type: application/json'
+    # Sample cURL: curl --request PATCH localhost:5000/order-a-pizza -d '{"order_number": 1, "pizza": {"number": 1, "size": "S", "type": "vegetarian", "toppings": {}}}' -H 'Content-Type: application/json'
     data = request.get_json()
-    if ("order_number" not in data) or ("pizza" not in data) or ("number" not in data["pizza"]) or ("size" not in data["pizza"]) or ("type" not in data["pizza"]) or ("toppings" not in data["pizza"]) or (not isinstance(data["order_number"], int)or (not isinstance(data["pizza"]["number"], int) or (data["pizza"]["size"] not in ["S","M","L"]):
+    if ("order_number" not in data) or (not isinstance(data["order_number"], int)) or ("pizza" not in data) or (not isinstance(data["pizza"], dict)) or ("number" not in data["pizza"]) or (not isinstance(data["pizza"]["number"], int)) or ("size" not in data["pizza"]) or (data["pizza"]["size"] not in system.menu.content["pizza"]["size"]) or ("type" not in data["pizza"]) or(data["pizza"]["type"] not in system.menu.content["pizza"]["type"]) or ("toppings" not in data["pizza"]) or (not isinstance(data["pizza"]["toppings"], dict)):
         return make_response('Invalid input', 400)
     
     for topping in data["pizza"]["toppings"]:
-        if (topping not in system.menu.content["pizza"]["topping"]) or (not isinstance(data["pizza"]["toppings"][topping],int)):
+        if (topping not in system.menu.content["pizza"]["topping"]) or (not isinstance(data["pizza"]["toppings"][topping], int)):
             return make_response('Invalid input', 400)       
 
     order = system.find_order_by_order_number(data['order_number'])
@@ -81,7 +81,7 @@ def order_a_pizza():
 @app.route('/order-a-drink', methods = ['PATCH'])
 def order_a_drink():
     # Route For Ordering a drink (any number of it)
-    # Sample cURL: curl --request PATCH localhost:5000/order-a-drink -d '{"order_number": 2, "drink": {"drink_name": "Diet Coke22", "number": 5}}' -H 'Content-Type: application/json'
+    # Sample cURL: curl --request PATCH localhost:5000/order-a-drink -d '{"order_number": 2, "drink": {"drink_name": "Diet Coke", "number": 5}}' -H 'Content-Type: application/json'
     data = request.get_json()
     if ("order_number" not in data) or (not isinstance(data["order_number"], int)) or ("drink" not in data) or (not isinstance(data["drink"], dict)) or ("drink_name" not in data["drink"]) or (data["drink"]["drink_name"] not in system.menu.content["drink"]) or ("number" not in data["drink"]) or (not isinstance(data["drink"]["number"], int)):
         return make_response('Invalid input', 400)
@@ -95,11 +95,12 @@ def order_a_drink():
 @app.route('/change-an-order', methods = ['PATCH'])
 def change_an_order():
     # Route When the User wants to change the order.
-    # Sample cURL: curl --request PATCH localhost:5000/change-an-order -d '{"order_number": 4, "pizzas": [{"item_id": 1, "size": "S", "type": "vegetarian"}], "drinks": []}' -H 'Content-Type: application/json'
+    # Sample cURL: curl --request PATCH localhost:5000/change-an-order -d '{"order_number": 2, "pizzas": [{"item_id": 1, "size": "S", "type": "vegetarian"}], "drinks": []}' -H 'Content-Type: application/json'
     # User need to provide the order_number they want to change, the item_id for pizzas or drinks they are going to modify.
     # Note that since each pizza has a type, that has a specific preparation method. Hence, if the user is going to decreasing the toppings, we will check if it still meets the minimum requirement for that type of pizza. If not, we will send back a response that saying the update doesn't finish because the preparation method can not be done with those toppings.
     data = request.get_json()
-    #if ("order_number" not in data) or ("pizzas" not in data) or 
+    if ("order_number" not in data) or (not(isinstance(data["order_number"], int))) or ("pizzas" not in data) or (not(isinstance(data["pizzas"], list))) or ("drinks" not in data) or (not(isinstance(data["drinks"], list))):
+         return make_response('Invalid input', 400)
     modified_order = system.change_an_order(data["order_number"], data['pizzas'], data['drinks'])
     if modified_order == None:
         return make_response('The Order Number doesn\'t exist.', 404)
@@ -170,7 +171,7 @@ def add_new_type():
     # Route for adding a new type.
     # curl localhost:5000/add-new-type -d '{"name": "New", "method": {"beef": 9, "chicken": 1}}' -H 'Content-Type: application/json'
     data = request.get_json()
-    if ("name" not in data) or ("method" not in data):
+    if ("name" not in data) or (not isinstance(data["name"], str)) or ("method" not in data) or (not isinstance(data["method"], dict)):
         return make_response('Invalid input', 400)
     for topping in data["method"]:
         if (topping not in system.menu.content["pizza"]["topping"]) or (not isinstance(data["method"][topping], int)):
