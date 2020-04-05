@@ -90,7 +90,7 @@ class Order:
             this.price -= drink.get_price(menu)
             drink.number += new_drink["number"]
             this.price += drink.get_price(menu)
-            return "Added Successfully."
+            return drink
         else:
             if("item_id" not in new_drink):
                 new_drink["item_id"] = this.unique_key_maker(this.drinks)

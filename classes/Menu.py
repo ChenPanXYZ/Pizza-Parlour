@@ -18,7 +18,7 @@ class Menu:
             this.content['drink'][item] = price
             return 1
         else:
-            return 400
+            return 404
 
     def get_price_for_specific_item(this, item):
         if item in this.content['pizza']['size']:
