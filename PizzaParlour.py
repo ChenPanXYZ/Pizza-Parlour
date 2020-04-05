@@ -34,7 +34,7 @@ def check_order():
 def cancel_order():
     # curl --request DELETE localhost:5000/cancel-order -d '{"order_number": 1}' -H 'Content-Type: application/json'
     data = request.get_json()
-    if "order_number" not in data:
+    if ("order_number" not in data) or (not isinstance(data["order_number"], int)):
         return make_response('Invalid input', 400)
     result = system.cancel_order(data['order_number'])
     system.update_data()
@@ -76,8 +76,10 @@ def order_a_pizza():
 @app.route('/order-a-drink', methods = ['PATCH'])
 def order_a_drink():
     # Route For Ordering a drink (any number of it)
-    # Sample cURL: curl --request PATCH localhost:5000/order-a-drink -d '{"order_number": 2, "drink": {"drink_name": "Diet Coke", "number": 5}}' -H 'Content-Type: application/json'
+    # Sample cURL: curl --request PATCH localhost:5000/order-a-drink -d '{"order_number": 2, "drink": {"drink_name": "Diet Coke22", "number": 5}}' -H 'Content-Type: application/json'
     data = request.get_json()
+    if("order_number" not in data) or (not isinstance(data["order_number"], int)) or ("drink" not in data) or (not isinstance(data["drink"], dict)) or ("drink_name" not in data["drink"]) or (data["drink"]["drink_name"] not in system.menu.content["drink"]) or ("number" not in data["drink"]) or (not isinstance(data["drink"]["number"], int)):
+        return make_response('Invalid input', 400)
     order = system.find_order_by_order_number(data['order_number'])
     if order is None:
         return make_response('The Order Number doesn\'t exist.', 404)
@@ -102,8 +104,10 @@ def change_an_order():
 @app.route('/set-address', methods = ['PATCH'])
 def set_address():
     # Route When the User set an address for his / her order.
-    # Sample cURL: curl --request PATCH localhost:5000/set-address -d '{"order_number": 1, "address": "222 Street"}' -H 'Content-Type: application/json'
+    # Sample cURL: curl --request PATCH localhost:5000/set-address -d '{"order_number": 400, "address": "222 Street"}' -H 'Content-Type: application/json'
     data = request.get_json()
+    if ("order_number" not in data) or ("address" not in data):
+        return make_response('Invalid input', 400)
     order_number = data["order_number"]
     address = data["address"]
     order = system.find_order_by_order_number(data['order_number'])
@@ -117,6 +121,8 @@ def set_address():
 def set_delivery():
     # curl localhost:5000/set-delivery -d '{"order_number": 1, "delivery": "uber"}' -H 'Content-Type: application/json'
     data = request.get_json()
+    if ("order_number" not in data) or ("delivery" not in data) or not(data["delivery"] == "uber" or data["delivery"] == "foodora"):
+        return make_response('Invalid input', 400)
     order_number = data["order_number"]
     order = system.find_order_by_order_number(order_number)
     if order is None:
@@ -142,9 +148,11 @@ def get_full_menu():
 @app.route('/get-price-for-specific-item')
 def get_price_for_specific_item():
     # Route For Checking the price for a specific item
-    # Sample cURL: curl localhost:5000/get-price-for-specific-item -d '{"item": "pepperoni"}' -H 'Content-Type: application/json'
+    # Sample cURL: curl --request GET localhost:5000/get-price-for-specific-item -d '{"item2": []}' -H 'Content-Type: application/json'
     # Expected Ourput: The price of that item. Here, $2.
     data = request.get_json()
+    if ("item" not in data) or (not isinstance(data["item"], str)):
+        return make_response('Invalid input', 400)
     result = system.menu.get_price_for_specific_item(data['item'])
     if result == -1:
         return make_response("The Item doesn\'t exist.", 404)
@@ -154,7 +162,7 @@ def get_price_for_specific_item():
 @app.route('/add-new-type', methods = ['POST'])
 def add_new_type():
     # Route for adding a new type.
-    # curl localhost:5000/add-new-type -d '{"name": "New", "method": {"beef": 10, "chicken": 1}}' -H 'Content-Type: application/json'
+    # curl localhost:5000/add-new-type -d '{"name": "New", "method": {"beef": 9, "chicken": 1}}' -H 'Content-Type: application/json'
     data = request.get_json()
     result = system.add_new_type(data)
     return make_response(jsonify(result), 201)
@@ -163,6 +171,8 @@ def add_new_type():
 def change_price_for_item():
     # curl --request PATCH localhost:5000/change-price-for-item -d '{"item": "olives", "price": 5}' -H 'Content-Type: application/json'
     data = request.get_json()
+    if ("item" not in data) or (not isinstance(data["item"], str)) or ("price" not in data) or (not isinstance(data["price"], (int, float))):
+        return make_response('Invalid input', 400)
     result = system.menu.change_price_for_item(data["item"], data["price"], system.types)
     if result == 404:
         return make_response("The Item doesn\'t exist.", 404)
