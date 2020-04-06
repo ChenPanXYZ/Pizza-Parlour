@@ -13,12 +13,12 @@ def welcome_pizza():
 # Order Part
 @app.route('/make-a-new-order', methods = ['POST'])
 def make_a_new_order():
-    # curl localhost:5000/make-a-new-order -d '{}' -H 'Content-Type: application/json'
+    # curl --request POST localhost:5000/make-a-new-order -d '{}' -H 'Content-Type: application/json'
     new_order_number = system.make_a_new_order()
     system.update_data()
     return make_response(jsonify(new_order_number), 201)
 
-@app.route('/check-order')
+@app.route('/check-order', methods = ['GET'])
 def check_order():
     # curl --request GET localhost:5000/check-order -d '{"order_number": 1}' -H 'Content-Type: application/json'
     data = request.get_json()
@@ -47,13 +47,13 @@ def cancel_order():
 
 @app.route('/show-all-orders', methods = ['GET'])
 def show_all_orders():
-    # Sample cURL: curl localhost:5000/show-all-orders
+    # Sample cURL: curl --request GET localhost:5000/show-all-orders
     return make_response(jsonify(system.show_all_orders()), 200)
 
 @app.route('/order-a-pizza', methods = ['PATCH'])
 def order_a_pizza():
     # Route For Ordering a piazza
-    # Sample cURL: curl --request PATCH localhost:5000/order-a-pizza -d '{"order_number": 1, "pizza": {"number": 1, "size": "S", "type": "vegetarian", "toppings": {}}}' -H 'Content-Type: application/json'
+    # Sample cURL: curl --request PATCH localhost:5000/order-a-pizza -d '{"order_number": 4, "pizza": {"number": 1, "size": "S", "type": "vegetarian", "toppings": {"beef": 2, "tomatoes": 1, "pepperoni": 1, "jalapenos": 2}}}' -H 'Content-Type: application/json'
     data = request.get_json()
     if ("order_number" not in data) or (not isinstance(data["order_number"], int)) or ("pizza" not in data) or (not isinstance(data["pizza"], dict)) or ("number" not in data["pizza"]) or (not isinstance(data["pizza"]["number"], int)) or ("size" not in data["pizza"]) or (data["pizza"]["size"] not in system.menu.content["pizza"]["size"]) or ("type" not in data["pizza"]) or(data["pizza"]["type"] not in system.menu.content["pizza"]["type"]) or ("toppings" not in data["pizza"]) or (not isinstance(data["pizza"]["toppings"], dict)):
         return make_response('Invalid input', 400)
@@ -96,6 +96,7 @@ def order_a_drink():
 def change_an_order():
     # Route When the User wants to change the order.
     # Sample cURL: curl --request PATCH localhost:5000/change-an-order -d '{"order_number": 2, "pizzas": [{"item_id": 1, "size": "S", "type": "vegetarian"}], "drinks": []}' -H 'Content-Type: application/json'
+
     # User need to provide the order_number they want to change, the item_id for pizzas or drinks they are going to modify.
     # Note that since each pizza has a type, that has a specific preparation method. Hence, if the user is going to decreasing the toppings, we will check if it still meets the minimum requirement for that type of pizza. If not, we will send back a response that saying the update doesn't finish because the preparation method can not be done with those toppings.
     data = request.get_json()
@@ -111,7 +112,7 @@ def change_an_order():
 @app.route('/set-address', methods = ['PATCH'])
 def set_address():
     # Route When the User set an address for his / her order.
-    # Sample cURL: curl --request PATCH localhost:5000/set-address -d '{"order_number": 400, "address": "222 Street"}' -H 'Content-Type: application/json'
+    # Sample cURL: curl --request PATCH localhost:5000/set-address -d '{"order_number": 1, "address": "222 Street"}' -H 'Content-Type: application/json'
     data = request.get_json()
     if ("order_number" not in data) or ("address" not in data):
         return make_response('Invalid input', 400)
@@ -148,14 +149,13 @@ def set_delivery():
 def get_full_menu():
     # Route For Get the Full Menu
     # Sample cURL: curl localhost:5000/get-full-menu
-    # Expected Output: JSON contains infomation of the menu.
 
     return make_response(jsonify(system.menu.get_full_content()), 200)
 
-@app.route('/get-price-for-specific-item')
+@app.route('/get-price-for-specific-item', methods = ['GET'])
 def get_price_for_specific_item():
     # Route For Checking the price for a specific item
-    # Sample cURL: curl --request GET localhost:5000/get-price-for-specific-item -d '{"item": []}' -H 'Content-Type: application/json'
+    # Sample cURL: curl --request GET localhost:5000/get-price-for-specific-item -d '{"item": "Coke"}' -H 'Content-Type: application/json'
     # Expected Ourput: The price of that item. Here, $2.
     data = request.get_json()
     if ("item" not in data) or (not isinstance(data["item"], str)):
