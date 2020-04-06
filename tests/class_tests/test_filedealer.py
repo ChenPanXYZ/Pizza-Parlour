@@ -76,7 +76,7 @@ def test_filerdealer_load_foodora_csv():
     assert after == expected
 
 def test_filerdealer_load_types():
-    expected = {"pepperonis": {"olives": 2, "mushrooms": 1}, "margherita": {"chicken": 3}, "vegetarian": {"jalapenos": 2, "pepperoni": 1}, "Neapolitan": {"beef": 2}, "New": {"beef": 10, "chicken": 1}}
+    expected = {"pepperonis": {"olives": 2, "mushrooms": 1}, "margherita": {"chicken": 3}, "vegetarian": {"jalapenos": 2, "pepperoni": 1}, "Neapolitan": {"beef": 2}}
     after = file_dealer.load_types()
     assert after == expected
 

@@ -7,14 +7,14 @@ def test_new_system():
     assert isinstance(system.menu, Menu)
     assert isinstance(system.file_dealer, FileDealer)
     assert len(system.orders) == 3
-    assert system.types == {"pepperonis": {"olives": 2, "mushrooms": 1}, "margherita": {"chicken": 3}, "vegetarian": {"jalapenos": 2, "pepperoni": 1}, "Neapolitan": {"beef": 2}, "New": {"beef": 10, "chicken": 1}}
+    assert system.types == {"pepperonis": {"olives": 2, "mushrooms": 1}, "margherita": {"chicken": 3}, "vegetarian": {"jalapenos": 2, "pepperoni": 1}, "Neapolitan": {"beef": 2}}
     assert len(system.deliveries["uber"]) == 1
     assert len(system.deliveries["foodora"]) == 1
 
 def test_add_new_type():
     system = System()
     system.add_new_type({"name": "New Type", "method": {"beef": 3}})
-    assert system.types == {"pepperonis": {"olives": 2, "mushrooms": 1}, "margherita": {"chicken": 3}, "vegetarian": {"jalapenos": 2, "pepperoni": 1}, "Neapolitan": {"beef": 2}, "New": {"beef": 10, "chicken": 1}, "New Type": {"beef": 3}}
+    assert system.types == {"pepperonis": {"olives": 2, "mushrooms": 1}, "margherita": {"chicken": 3}, "vegetarian": {"jalapenos": 2, "pepperoni": 1}, "Neapolitan": {"beef": 2}, "New Type": {"beef": 3}}
 
 def test_make_a_new_order():
     system = System()
