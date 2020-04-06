@@ -45,7 +45,10 @@ This doesn't cover 90% lines of the codes, but we will cover 90% lines of the co
 
 ## Demo Video<a name="demo"></a>
 [![IMAGE ALT TEXT](https://blog.chenpan.xyz/wp-content/uploads/2020/04/demo-video-screenshot.png)](https://www.youtube.com/watch?v=LMSJN-cWAc8&feature=youtu.be "Demo Video")
-Click to see the demo video on Youtube.
+Click the picture to see the demo video on Youtube.
+
+**Note that when making this video, we found that there is a type "new" in Types.json, but there is no corresponding "new" in Menu.json, which does not affect the result of the Video, but might send 400 if the user orders a "new" pizza. So, we removed "new" from the sample data. But we don't have time to remake this Video, sorry about this!
+
 ## Data<a name="data"></a>
 We use file-based database. We have five files that store the data. All the data files are in the **data** folder.
 
@@ -122,8 +125,7 @@ Sample data looks like:
 "pepperonis": {"olives": 2, "mushrooms": 1}, 
 "margherita": {"chicken": 3}, 
 "vegetarian": {"jalapenos": 2, "pepperoni": 1}, 
-"Neapolitan": {"beef": 2}, 
-"New": {"beef": 10, "chicken": 1}}
+"Neapolitan": {"beef": 2}
 ```
 ### Uber.json
 ```
